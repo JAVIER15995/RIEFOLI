@@ -21,8 +21,8 @@ pacman::p_load(here, easyclimate, patchwork, viridis, ggmisc, fs, future, furrr,
 library(remotes)
 library(easyclimate)
 
-polif <- read_csv(file = here("DATOS", "polifenoles.csv"))
-produ<- read_csv(file = here("DATOS", "produccion.csv"))
+polif <- read_delim(file = here("DATOS", "polifenoles.csv"), delim = ";")
+produ<- read_delim(file = here("DATOS", "produccion.csv"), delim = ";")
 
 names(polif)
 
