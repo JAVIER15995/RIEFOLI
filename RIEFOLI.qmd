@@ -28,4 +28,29 @@ names(polif)
 
 ```
 
-Hacemos los datos tidy
+Hacemos los datos tidy (ya están)
+
+Hago una exploración gráfica para ver si hay outlayers
+
+```{r}
+library(ggplot2)
+names(polif)
+
+ggplot() + 
+  geom_point(data = polif, aes(x =UdExp, y = Polifenoles)) 
+
+ggplot() + 
+  geom_point(data = polif, aes(x = as.factor(Riego), y = Polifenoles))
+
+ggplot() + 
+  geom_point(data = polif, aes(x = as.factor(Riego), y = Polifenoles, color = Cubierta))
+
+ggplot() + 
+  geom_point(data = produ, aes(x = as.factor(Riego), y = Produccion, color = Cubierta))          
+names(produ)
+
+```
+
+He visto que los tratamientos estaban mál en la tabla, lo corrijo
+
+Hago las medias de las repeticiones de campo labo
