@@ -28,5 +28,39 @@ ggplot() +
   geom_point(data = polif, aes(x = as.factor(Riego), y = Polifenoles))
 
 ggplot() + 
-  geom_jitter(data = polif, aes(x = as.factor(Riego), y = Polifenoles, color = Cubierta))
-              
+  geom_point(data = polif, aes(x = as.factor(Riego), y = Polifenoles, color = Cubierta))
+
+ggplot() + 
+  geom_point(data = produ, aes(x = as.factor(Riego), y = Produccion, color = Cubierta))          
+names(produ)
+
+ggplot() + 
+  geom_point(data = polif, aes(x = as.factor(Cubierta), y = Polifenoles, color = Riego))
+ggplot() + 
+  geom_point(data = produ, aes(x = as.factor(Cubierta), y = Produccion, color =Riego))      
+names(produ)
+
+
+##tabla con las medias de las repeticiones
+
+mean_polif <- polif |>
+  group_by(UdExp) |>
+  summarise(mean_polif= mean(Polifenoles), sd_polif = sd(Polifenoles))
+
+
+names(polif)
+
+mean_produ <- produ |>
+  group_by(Bloque, UdExp, Riego, Cubierta) |>
+  summarise(mean_produc= mean(Produccion), sd_produ = sd(Produccion))
+
+# con group by añado las columnas Bloque, Cubierta, Riego  
+
+#Ahora fusiono ambas tablas
+
+riefoli <-full_join(mean_produ, mean_polif, by =c("UdExp"))
+
+Riefoli_trat <- 
+
+
+  
