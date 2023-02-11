@@ -5,7 +5,6 @@ library(tidyverse)
 library(tidyr)
 library(maps)
 library(pacman)
-pacman::p_load(here, easyclimate, patchwork, viridis, ggmisc, fs, future, furrr, rmarkdown) 
 library(remotes)
 library(easyclimate)
 
@@ -85,50 +84,174 @@ ggplot() +
 
 names(Riefoli_trat)
 
-#grafico de barras
+#Grafico de barras
 
 
 summary(Riefoli_trat)
 str (Riefoli_trat)
 
+##Por tratamiento
 
+ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_polif)) +
+  geom_col(color = "black") +
+  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif), width = 0.25)
+ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_produc)) +
+  geom_col(fill = "black") +
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc), width = 0.25)
+
+
+##Por factor riego
 
 ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_produc, fill = Riego)) +
-  geom_boxplot()
-ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_produc, fill = Cubierta)) +
   geom_boxplot()
 
 ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_polif, fill = Riego)) +
   geom_boxplot()
 
+##Por factor cubierta
+
+ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_produc, fill = Cubierta)) +
+  geom_boxplot()
+
+ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, fill = Cubierta)) +
+  geom_boxplot()
+
+#Representando ambos factores
+
 ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, color = Riego)) +
   geom_point( size= 4 )+
   geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
 
+##Como solo son 16 datos, no puedo crear otro gráfico que no sea de puntos sin que me de error
+#voy a los datos originales para poder hacer boxplot con las repteciones de campo o labo en lugar de con la media
 
 ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, color = Riego)) +
   geom_boxplot()
-  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, fill = Riego)) +
+  geom_boxplot()
+ggplot(data = produ , aes(x =as.factor(Cubierta), y = Produccion, fill = Riego)) +
+  geom_boxplot()
   
-  ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles)) +
+##Represento las mismas tablas que al principio por factor pero con los datos de las tablas originales 
+ggplot(data = polif , aes(x =as.factor(Riego), y = Polifenoles, color = Riego)) +
     geom_boxplot()
-  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
-  
-  ggplot(data = polif , aes(x =as.factor(Riego), y = Polifenoles)) +
-    geom_boxplot()
-  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
-
-
-geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc), width = 0.25)
+ggplot(data = polif , aes(x =as.factor(Riego), y = Polifenoles, fill = Riego)) +
+  geom_boxplot()
+ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, fill = Cubierta)) +
+  geom_boxplot()
+ggplot(data = produ, aes(x =as.factor(Riego), y = Produccion, fill = Riego)) +
+  geom_boxplot()
+ggplot(data = produ , aes(x =as.factor(Cubierta), y = Produccion, fill = Cubierta)) +
+  geom_boxplot()
 
 ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_polif)) +
   geom_col(color = "black") +
   geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif), width = 0.25)
 
-##Hacer esto mismo con producción
+ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_produc)) +
+  geom_col(fill = "darkolivegreen4") +
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc), width = 0.25)
 
-ggplot(data = Riefoli_trat) + 
-  geom_violin(aes(x = as.factor(trat), y =mean_polif  , fill = Cubierta), draw_quantiles = 0.5) 
+#Guardo los gráficos que me gustan
+
+Barraspolif <- ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_polif)) +
+  geom_col(fill = "cyan", color ="black") +
+  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+Barraspolif
+Barrasprodu <- ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_produc)) +
+  geom_col(fill = "darkolivegreen4") +
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc - sd_produ), width = 0.25)
+Barrasprodu
+sum_produc_riego <- ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_produc, fill = Riego)) +
+  geom_boxplot()
+sum_produc_riego
+sum_poli_riego <- ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_polif, fill = Riego)) +
+  geom_boxplot()
+sum_poli_riego
+sum_produc_cub <-  ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_produc, fill = Cubierta)) +
+  geom_boxplot()
+sum_poli_cub <-  ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, fill = Cubierta)) +
+  geom_boxplot()
+sum_produc_cub
+sum_poli_cub
+Puntos_poli <-  ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, color = Riego)) +
+  geom_point( size= 4 )+
+  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+Puntos_poli
+Puntos_Produ <-  ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_produc, color = Riego)) +
+  geom_point( size= 4 )+
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc - sd_produ), width = 0.25)
+Puntos_Produ
+box_poli <- ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, fill = Riego)) +
+  geom_boxplot()
+box_poli
+box_produ <- ggplot(data = produ , aes(x =as.factor(Cubierta), y = Produccion, fill = Riego)) +
+   geom_boxplot()
+box_produ
+poli_riego <- ggplot(data = polif , aes(x =as.factor(Riego), y = Polifenoles, fill = Riego)) +
+  geom_boxplot()
+poli_riego
+poli_cub <- ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, fill = Cubierta)) +
+  geom_boxplot()
+poli_cub
+produc_riego <- ggplot(data = produ, aes(x =as.factor(Riego), y = Produccion, fill = Riego)) +
+  geom_boxplot()
+produc_riego
+produc_cub <-ggplot(data = produ , aes(x =as.factor(Cubierta), y = Produccion, fill = Cubierta)) +
+  geom_boxplot()
+produc_cub
+
+#Comparo craficos hechos con el resumen y con la tabla total y guardo los que me gustan
+Puntos_poli+box_poli
+Puntos_poli/box_poli
+comparacion_poli <- Puntos_poli+box_poli
+comparacion_produ <-Puntos_Produ+box_produ
+comparación_poli_riego <- sum_poli_riego+poli_riego
+comparación_poli_cub <- sum_poli_cub+poli_cub
+comparación_produ_riego <- sum_produc_riego+produc_riego
+comparación_produ_cub <- sum_produc_cub+produc_cub
+
+comparacion_poli 
+comparacion_produ 
+comparación_poli_riego 
+comparación_poli_cub 
+comparación_produ_riego 
+comparación_produ_cub 
+
+#Presento tablas finales
+
+Final_trat_poli <- box_poli+ Barraspolif
+Final_trat_produ <- box_produ + Barrasprodu
+
+Final_poli <- poli_riego+poli_cub
+Final_produ <- produc_riego+produc_cub
+
+#Visualización de gráficas finales
+
+Final_trat_poli
+Final_trat_produ 
+Final_poli
+Final_produ
+
+
+##pruebas que no funcionan
+
+# ggplot(data = Riefoli_trat) + 
+#   geom_violin(aes(x = as.factor(trat), y =mean_polif  , fill = Cubierta), draw_quantiles = 0.5) 
+# 
+# .ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles)) +
+#   geom_boxplot()
+# geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+# 
+# geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc), width = 0.25)
+# geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+# geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+# 
+# ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_polif)) +
+#   geom_col() +
+#   scale_color_manual(values = c("darkgreen", "chartreuse"))+
+#   geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif), width = 0.25)
+
 
 
 
