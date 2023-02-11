@@ -7,17 +7,16 @@ editor: visual
 
 ## RIEFOLI
 
-El IMIDRA está llevando a cabo el proyecto RIEFOLI en un olivar intensivo en la finca experimental "La chimenea", (Aranjuez-Colmenar de oreja). En este se proyecto se combina el uso de cuatro tramientos de cubiertas vegetales: (Cubierta de graminea (Brachipodium), Cubierta de leguminosas (Yeros), Cubierta vegetal espontánea y laboreo), con cuatro dosis de riego, (Riego completo (cubriendo las necesidades hidricas del árbol), Riego deficitario controlado, (Redución al 70% la dosis de riego completo, en un momento fenologico determinado), Riego soporte (Un aporte de 1500m3/año distribuidos a lo largo de la campaña de verano) y secano. En este proyecto se estudian los cambios en las propiedades fisico-quimicas (Materia orgánica, Calcimetría, analisis de macro y micro elementos del suelo, contenido de agua del suelo textura, porosidad, infiltración, resistencia a la pentetración....) microbiológicas (respiración basal del suelo, actividad enzimática, abundancia de Hongos, bacterias y arqueas). En el arbol se mide estrés hídrico, fotosísntesis, anchura de tronco, floración, maduración del fruto y produción de aceitunas. Tambien se elaborará aceite donde se medirá la producción industrial de aceite, el contenido en polifenoles y el contenido en pigmentos. En este trabajo se quiere relaccionar el contenido en polifenoles y la producción de aceitunas (Variables numéricas), con los diferentes tratamientos de riego y cubierta (Varialbes categóricas) ..
+El IMIDRA está llevando a cabo el proyecto RIEFOLI en un olivar intensivo en la finca experimental "La chimenea", (Aranjuez-Colmenar de oreja). En este se proyecto se combina el uso de cuatro tramientos de cubiertas vegetales: (Cubierta de graminea (Brachipodium), Cubierta de leguminosas (Yeros), Cubierta vegetal espontánea y laboreo), con cuatro dosis de riego, (Riego completo (cubriendo las necesidades hidricas del árbol), Riego deficitario controlado, (Redución al 70% la dosis de riego completo, en un momento fenologico determinado), Riego soporte (Un aporte de 1500m3/año distribuidos a lo largo de la campaña de verano) y secano. En este proyecto se estudian los cambios en las propiedades fisico-quimicas (Materia orgánica, Calcimetría, analisis de macro y micro elementos del suelo, contenido de agua del suelo textura, porosidad, infiltración, resistencia a la pentetración....) microbiológicas (respiración basal del suelo, actividad enzimática, abundancia de Hongos, bacterias y arqueas). En el arbol se mide estrés hídrico, fotosísntesis, anchura de tronco, floración, maduración del fruto y produción de aceitunas. Tambien se elaborará aceite donde se medirá la producción industrial de aceite, el contenido en polifenoles y el contenido en pigmentos. En este trabajo se quiere relaccionar el contenido en polifenoles y la producción de aceitunas (Variables numéricas), con los diferentes tratamientos de riego y cubierta (Variables categóricas) ..
 
 ```{r}
-#Cargamos los datos de excel
+p#Cargamos los datos de excel
 
 library(readxl)
 library(tidyverse)
 library(tidyr)
 library(maps)
 library(pacman)
-pacman::p_load(here, easyclimate, patchwork, viridis, ggmisc, fs, future, furrr, rmarkdown) 
 library(remotes)
 library(easyclimate)
 
@@ -40,10 +39,11 @@ sum(produ$Produccion)
 sd(produ$Produccion)
 ```
 
+El total de kg producidos es `r sum(produ$Produccion)`, con una media de `r mean(produ$Produccion)` kg por árbol
+
 Hago una exploración gráfica para ver si hay outlayers
 
 ```{r}
-library(ggplot2)
 names(polif)
 
 ggplot() + 
@@ -109,8 +109,15 @@ Pruebas gráficos
 ```{r}
 summary(Riefoli_trat)
 str (Riefoli_trat)
+ggplot() + 
+  geom_point(data =Riefoli_trat , aes(x = as.factor(Cubierta), y = mean_polif, color = Riego))
+ggplot() + 
+  geom_point(data = Riefoli_trat, aes(x = as.factor(Cubierta), y = mean_produc, color =Riego))      
+names(produ)
+ggplot() + 
+  geom_point(data = Riefoli_trat, aes(x = as.factor(trat), y = mean_produc, color =Riego))      
 
-
+names(Riefoli_trat)
 
 ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_produc, fill = Riego)) +
   geom_boxplot()
@@ -127,28 +134,185 @@ ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, color = 
 
 ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, color = Riego)) +
   geom_boxplot()
-  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
   
-  ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles)) +
-    geom_boxplot()
-  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
   
   ggplot(data = polif , aes(x =as.factor(Riego), y = Polifenoles)) +
     geom_boxplot()
-  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
-
-
-geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc), width = 0.25)
 
 ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_polif)) +
   geom_col(color = "black") +
   geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif), width = 0.25)
 
-##Hacer esto mismo con producción
-
-ggplot(data = Riefoli_trat) + 
-  geom_violin(aes(x = as.factor(trat), y =mean_polif  , fill = Cubierta), draw_quantiles = 0.5) 
-
+ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_produc)) +
+  geom_col(color = "black") +
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc), width = 0.25)
 
 
+```
+
+Gráfico de barras portratamiento
+
+```{r}
+summary(Riefoli_trat)
+str (Riefoli_trat)
+
+##Por tratamiento
+
+ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_polif)) +
+  geom_col(color = "black") +
+  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif), width = 0.25)
+ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_produc)) +
+  geom_col(fill = "black") +
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc), width = 0.25)
+```
+
+por factor riego y cubierta
+
+```{r}
+ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_produc, fill = Riego)) +
+  geom_boxplot()
+
+ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_polif, fill = Riego)) +
+  geom_boxplot()
+
+##Por factor cubierta
+
+ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_produc, fill = Cubierta)) +
+  geom_boxplot()
+
+ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, fill = Cubierta)) +
+  geom_boxplot()
+
+```
+
+Representamos ambos factores
+
+```{r}
+ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, color = Riego)) +
+  geom_point( size= 4 )+
+  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+```
+
+Como solo son 16 datos, no puedo crear otro gráfico que no sea de puntos sin que de error, voy a los datos originales para poder hacer boxplot con las repteciones de campo o labo en lugar de con la media.
+
+```{r}
+ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, color = Riego)) +
+  geom_boxplot()
+ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, fill = Riego)) +
+  geom_boxplot()
+ggplot(data = produ , aes(x =as.factor(Cubierta), y = Produccion, fill = Riego)) +
+  geom_boxplot()
+```
+
+Represento las mismas tablas que al principio por factor pero con los datos de las tablas originales
+
+```{r}
+ggplot(data = polif , aes(x =as.factor(Riego), y = Polifenoles, color = Riego)) +
+    geom_boxplot()
+ggplot(data = polif , aes(x =as.factor(Riego), y = Polifenoles, fill = Riego)) +
+  geom_boxplot()
+ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, fill = Cubierta)) +
+  geom_boxplot()
+ggplot(data = produ, aes(x =as.factor(Riego), y = Produccion, fill = Riego)) +
+  geom_boxplot()
+ggplot(data = produ , aes(x =as.factor(Cubierta), y = Produccion, fill = Cubierta)) +
+  geom_boxplot()
+
+ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_polif)) +
+  geom_col(color = "black") +
+  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif), width = 0.25)
+
+ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_produc)) +
+  geom_col(fill = "darkolivegreen4") +
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc), width = 0.25)
+
+```
+Guardo los gráficos que me gustan
+```{r}
+Barraspolif <- ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_polif)) +
+  geom_col(fill = "cyan", color ="black") +
+  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+Barraspolif
+Barrasprodu <- ggplot(data = Riefoli_trat, aes(x =as.factor(trat), y = mean_produc)) +
+  geom_col(fill = "darkolivegreen4") +
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc - sd_produ), width = 0.25)
+Barrasprodu
+sum_produc_riego <- ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_produc, fill = Riego)) +
+  geom_boxplot()
+sum_produc_riego
+sum_poli_riego <- ggplot(data = Riefoli_trat, aes(x =as.factor(Riego), y = mean_polif, fill = Riego)) +
+  geom_boxplot()
+sum_poli_riego
+sum_produc_cub <-  ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_produc, fill = Cubierta)) +
+  geom_boxplot()
+sum_poli_cub <-  ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, fill = Cubierta)) +
+  geom_boxplot()
+sum_produc_cub
+sum_poli_cub
+Puntos_poli <-  ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_polif, color = Riego)) +
+  geom_point( size= 4 )+
+  geom_errorbar(aes(ymax = mean_polif + sd_polif, ymin = mean_polif - sd_polif), width = 0.25)
+Puntos_poli
+Puntos_Produ <-  ggplot(data = Riefoli_trat, aes(x =as.factor(Cubierta), y = mean_produc, color = Riego)) +
+  geom_point( size= 4 )+
+  geom_errorbar(aes(ymax = mean_produc + sd_produ, ymin = mean_produc - sd_produ), width = 0.25)
+Puntos_Produ
+box_poli <- ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, fill = Riego)) +
+  geom_boxplot()
+box_poli
+box_produ <- ggplot(data = produ , aes(x =as.factor(Cubierta), y = Produccion, fill = Riego)) +
+   geom_boxplot()
+box_produ
+poli_riego <- ggplot(data = polif , aes(x =as.factor(Riego), y = Polifenoles, fill = Riego)) +
+  geom_boxplot()
+poli_riego
+poli_cub <- ggplot(data = polif , aes(x =as.factor(Cubierta), y = Polifenoles, fill = Cubierta)) +
+  geom_boxplot()
+poli_cub
+produc_riego <- ggplot(data = produ, aes(x =as.factor(Riego), y = Produccion, fill = Riego)) +
+  geom_boxplot()
+produc_riego
+produc_cub <-ggplot(data = produ , aes(x =as.factor(Cubierta), y = Produccion, fill = Cubierta)) +
+  geom_boxplot()
+produc_cub
+```
+Comparo craficos hechos con el resumen y con la tabla total y guardo los que me gustan
+```{r}
+Puntos_poli+box_poli
+Puntos_poli/box_poli
+comparacion_poli <- Puntos_poli+box_poli
+comparacion_produ <-Puntos_Produ+box_produ
+comparación_poli_riego <- sum_poli_riego+poli_riego
+comparación_poli_cub <- sum_poli_cub+poli_cub
+comparación_produ_riego <- sum_produc_riego+produc_riego
+comparación_produ_cub <- sum_produc_cub+produc_cub
+
+comparacion_poli 
+comparacion_produ 
+comparación_poli_riego 
+comparación_poli_cub 
+comparación_produ_riego 
+comparación_produ_cub 
+
+```
+De las comparaciones elijo los que más me gustan y hago una composicón con los graficos finales. 
+```{r}
+Final_trat_poli <- box_poli+ Barraspolif
+Final_trat_produ <- box_produ + Barrasprodu
+
+Final_poli <- poli_riego+poli_cub
+Final_produ <- produc_riego+produc_cub
+Polifenoles <- Final_poli/box_poli
+Produccion <- Final_produ/box_produ
+
+
+```
+Visualización de las graficas finales
+```{r}
+Final_trat_poli
+Final_trat_produ 
+Final_poli
+Final_produ
+Polifenoles
+Produccion
 ```
