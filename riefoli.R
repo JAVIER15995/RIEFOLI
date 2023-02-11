@@ -218,13 +218,15 @@ comparación_poli_cub
 comparación_produ_riego 
 comparación_produ_cub 
 
-#Presento tablas finales
+#Presento composiciones finales finales
 
 Final_trat_poli <- box_poli+ Barraspolif
 Final_trat_produ <- box_produ + Barrasprodu
 
 Final_poli <- poli_riego+poli_cub
 Final_produ <- produc_riego+produc_cub
+Polifenoles <- Final_poli/box_poli
+Produccion <- Final_produ/box_produ
 
 #Visualización de gráficas finales
 
@@ -232,6 +234,9 @@ Final_trat_poli
 Final_trat_produ 
 Final_poli
 Final_produ
+Polifenoles
+Produccion
+
 
 
 ##pruebas que no funcionan
