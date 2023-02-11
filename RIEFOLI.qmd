@@ -7,7 +7,7 @@ editor: visual
 
 ## RIEFOLI
 
-El IMIDRA está llevando a cabo el proyecto RIEFOLI en un olivar intensivo en la finca experimental "La chimenea", (Aranjuez-Colmenar de oreja). En este se proyecto se combina el uso de cuatro tramientos de cubiertas vegetales: (Cubierta de graminea (Brachipodium), Cubierta de leguminosas (Yeros), Cubierta vegetal espontánea y laboreo), con cuatro dosis de riego, (Riego completo (cubriendo las necesidades hidricas del árbol), Riego deficitario controlado, (Redución al 70% la dosis de riego completo, en un momento fenologico determinado), Riego soporte (Un aporte de 1500m3/año distribuidos a lo largo de la campaña de verano) y secano. En este proyecto se estudian los cambios en las propiedades fisico-quimicas (Materia orgánica, Calcimetría, analisis de macro y micro elementos del suelo, contenido de agua del suelo textura, porosidad, infiltración, resistencia a la pentetración....) microbiológicas (respiración basal del suelo, actividad enzimática, abundancia de Hongos, bacterias y arqueas). En el arbol se mide estrés hídrico, fotosísntesis, anchura de tronco, floración, maduración del fruto y produción de aceitunas. Tambien se elaborará aceite donde se medirá la producción industrial de aceite, el contenido en polifenoles y el contenido en pigmentos. En este trabajo se quiere relaccionar el contenido en polifenoles con los diferentes tratamientos y la producción de aceitunas.
+El IMIDRA está llevando a cabo el proyecto RIEFOLI en un olivar intensivo en la finca experimental "La chimenea", (Aranjuez-Colmenar de oreja). En este se proyecto se combina el uso de cuatro tramientos de cubiertas vegetales: (Cubierta de graminea (Brachipodium), Cubierta de leguminosas (Yeros), Cubierta vegetal espontánea y laboreo), con cuatro dosis de riego, (Riego completo (cubriendo las necesidades hidricas del árbol), Riego deficitario controlado, (Redución al 70% la dosis de riego completo, en un momento fenologico determinado), Riego soporte (Un aporte de 1500m3/año distribuidos a lo largo de la campaña de verano) y secano. En este proyecto se estudian los cambios en las propiedades fisico-quimicas (Materia orgánica, Calcimetría, analisis de macro y micro elementos del suelo, contenido de agua del suelo textura, porosidad, infiltración, resistencia a la pentetración....) microbiológicas (respiración basal del suelo, actividad enzimática, abundancia de Hongos, bacterias y arqueas). En el arbol se mide estrés hídrico, fotosísntesis, anchura de tronco, floración, maduración del fruto y produción de aceitunas. Tambien se elaborará aceite donde se medirá la producción industrial de aceite, el contenido en polifenoles y el contenido en pigmentos. En este trabajo se quiere relaccionar el contenido en polifenoles y la producción de aceitunas (Variables numéricas), con los diferentes tratamientos de riego y cubierta (Varialbes categóricas) ..
 
 ```{r}
 #Cargamos los datos de excel
@@ -30,7 +30,7 @@ names(polif)
 
 Hacemos los datos tidy (ya están)
 
-Para saber el total d media minimo y max de kg de aceitunas se cogieron
+Para saber el total de kg de aceitunas se cogieron así como la media, minimo, máximo y desviación de estandar de los Kg cogidos en cada árbol...
 
 ```{r}
 Kg <- glimpse(produ$Produccion)
@@ -61,9 +61,9 @@ names(produ)
 
 ```
 
-He visto que los tratamientos estaban mál en la tabla, lo corrijo
+He visto que los tratamientos estaban mál en la tabla, lo corrijo en excel, y vuelvo a correr el scritp para refrescar la info.
 
-Hago las medias y desvest de las repeticiones de campo labo
+Hago las medias y desvest de las repeticiones de campo o laboratorio para tener un unico dato por unidad experimental
 
 ```{r}
 mean_polif <- polif |>
