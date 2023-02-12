@@ -7,6 +7,13 @@ library(maps)
 library(pacman)
 library(remotes)
 library(easyclimate)
+library(here)
+library(ggmap)
+library(dplyr)
+library(plotly)
+library(patchwork) 
+library(easyclimate)
+library(terra)
 
 polif <- read_csv2(file = here("DATOS", "polifenoles.csv"))
 produ<- read_csv2(file = here("DATOS", "produccion.csv"))
@@ -18,7 +25,7 @@ names(polif)
 
 c("ggplot2", "readr", "dplyr", "ggThemeAssist", "patchwork", "titanic", "easyclimate", "terra", "sf", "ggmap", "plotly") %in% rownames(installed.packages())
 c("promises","mime", "cachem") %in% rownames(installed.packages())
-
+ names(polif)
 
 ggplot() + 
   geom_point(data = polif, aes(x =UdExp, y = Polifenoles)) 
